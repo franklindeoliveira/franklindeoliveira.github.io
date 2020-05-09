@@ -3,17 +3,14 @@
    
 <head>
    <title>Jogo Ludo</title>
-   <script src="animacao.js"></script>
-   <script src="teclado.js"></script>
+   <script src="jogo.js"></script>
+   <script src="controle.js"></script>
    <script src="colisor.js"></script>
    <script src="fundo.js"></script>
-   <script src="nave.js"></script>
+   <script src="pino.js"></script>
+   <script src="jogador.js"></script>
    <script src="dado.js"></script>
-   <script src="ovni.js"></script>
-   <script src="tiro.js"></script>
    <script src="spritesheet.js"></script>
-   <script src="explosao.js"></script>
-   <script src="painel.js"></script>
    <style>
    #link_jogar {
       /* Inicia oculto */
@@ -89,13 +86,13 @@
    <a id="postar_pontuacao" 
       href="javascript: postarPontuacao()">Compartilhar Pontua&ccedil;&atilde;o</a>
    
-   <!--
    <p>
       Setas: movimento <br>
       Espa&ccedil;o: tiro <br>
-      Enter: pausa
+      Enter: pausa <br>
+      Vez: <a id="vez"></a> <br>
+      Sorteado: <a id="sorteado"></a>
    </p>
-   -->
    
    <script>
       // Canvas e Context
@@ -103,7 +100,7 @@
       var context = canvas.getContext('2d');
 
       // Variáveis principais
-      var imagens, animacao, teclado, colisor, nave, criadorInimigos, jogadores;
+      var imagens, jogo, controle, colisor, nave, criadorInimigos, jogadores;
       var totalImagens = 0, carregadas = 0;
       var musicaAcao;
       
@@ -114,38 +111,32 @@
       function carregarImagens() {
          // Objeto contendo os nomes das imagens
          imagens = {
-            espaco:   'fundo-tabuleiro.jpg', 
-            //estrelas: 'fundo-estrelas.png', 
-            //nuvens:   'fundo-nuvens.png', 
-            nave:     'pino-amarelo.jpg',
-            j2nave:   'pino-azul.jpg',
-            j3nave:   'pino-vermelho.jpg',
-            j4nave:   'pino-verde.jpg',
-            ovni:     'ovni.png',
-            explosao: 'explosao.png',
-            dado:     'dado.png'
+            fundo: 'fundo-tabuleiro.jpg', 
+            pino1: 'pino-amarelo.jpg',
+            pino2: 'pino-azul.jpg',
+            pino3: 'pino-vermelho.jpg',
+            pino4: 'pino-verde.jpg',
+            dado:  'dado.png'
          };
          
          // Carregar todas
          for (var i in imagens) {
             var img = new Image();
             img.src = 'img/' + imagens[i];
-            img.id = 'pino';
+            //img.id = 'pino';
             img.onload = carregando;
             totalImagens++;            
             
             // Substituir o nome pela imagem
             imagens[i] = img;
          }
-
-         
       }
 
       function carregando() {
          context.save();         
          
          // Fundo 
-         context.drawImage(imagens.espaco, 0, 0, canvas.width,
+         context.drawImage(imagens.fundo, 0, 0, canvas.width,
                            canvas.height);
          
          // Texto "Carregando"
@@ -172,114 +163,137 @@
       
       function iniciarObjetos() {
          // Objetos principais
-         animacao = new Animacao(context);
-         teclado = new Teclado(canvas);
+         jogo = new Jogo(context);
+         controle = new Controle(canvas);
          colisor = new Colisor();
-         espaco = new Fundo(context, imagens.espaco);
-         //estrelas = new Fundo(context, imagens.estrelas);
-         //nuvens = new Fundo(context, imagens.nuvens);
-         dado = new Dado(context, teclado, imagens.dado);
+         fundo = new Fundo(context, imagens.fundo);
+         dado = new Dado(context, controle, imagens.dado);
 
          //jogador 1
-         j1nave = new Nave(context, teclado, imagens.nave, 
+         j1p1 = new Pino(context, controle, imagens.pino1, 
                          imagens.explosao, 50 - 11, 600 - 120);
-         j1nave2 = new Nave(context, teclado, imagens.nave, 
+         j1p2 = new Pino(context, controle, imagens.pino1, 
                          imagens.explosao, 50 - 11 + 50, 600 - 120);
-         j1nave3 = new Nave(context, teclado, imagens.nave, 
+         j1p3 = new Pino(context, controle, imagens.pino1, 
                          imagens.explosao, 50 - 11, 600 - 120 + 50);
-         j1nave4 = new Nave(context, teclado, imagens.nave, 
+         j1p4 = new Pino(context, controle, imagens.pino1, 
                          imagens.explosao, 50 - 11 + 50, 600 - 120 + 50);
-         //jogador 2
-         j2nave = new Nave(context, teclado, imagens.j2nave, 
-                         imagens.explosao, 50 - 11, 50 - 20);
-         j2nave2 = new Nave(context, teclado, imagens.j2nave, 
-                         imagens.explosao, 100 - 11, 50 - 20);
-         j2nave3 = new Nave(context, teclado, imagens.j2nave, 
-                         imagens.explosao, 50 - 11, 100 - 20);
-         j2nave4 = new Nave(context, teclado, imagens.j2nave, 
-                         imagens.explosao, 100 - 11, 100 - 20);
-         //jogador 3
-         j3nave = new Nave(context, teclado, imagens.j3nave, 
-                         imagens.explosao, 500 - 11, 50 - 20);
-         j3nave2 = new Nave(context, teclado, imagens.j3nave, 
-                         imagens.explosao, 550 - 11, 50 - 20);
-         j3nave3 = new Nave(context, teclado, imagens.j3nave, 
-                         imagens.explosao, 500 - 11, 100 - 20);
-         j3nave4 = new Nave(context, teclado, imagens.j3nave, 
-                         imagens.explosao, 550 - 11, 100 - 20);
-         //jogador 4
-         j4nave = new Nave(context, teclado, imagens.j4nave, 
-                         imagens.explosao, 500 - 11, 500 - 20);
-         j4nave2 = new Nave(context, teclado, imagens.j4nave, 
-                         imagens.explosao, 550 - 11, 500 - 20);
-         j4nave3 = new Nave(context, teclado, imagens.j4nave, 
-                         imagens.explosao, 500 - 11, 550 - 20);
-         j4nave4 = new Nave(context, teclado, imagens.j4nave, 
-                         imagens.explosao, 550 - 11, 550 - 20);
-         
-                         
-         painel = new Painel(context, j1nave);
-         
-         // Ligações entre objetos
-         animacao.novoSprite(espaco);
-         // animacao.novoSprite(estrelas);
-         // animacao.novoSprite(nuvens);
-         animacao.novoSprite(dado);
-         animacao.novoSprite(painel);
-         animacao.novoSprite(j1nave);
-         animacao.novoSprite(j1nave2);
-         animacao.novoSprite(j1nave3);
-         animacao.novoSprite(j1nave4);
-         animacao.novoSprite(j2nave);
-         animacao.novoSprite(j2nave2);
-         animacao.novoSprite(j2nave3);
-         animacao.novoSprite(j2nave4);
-         animacao.novoSprite(j3nave);
-         animacao.novoSprite(j3nave2);
-         animacao.novoSprite(j3nave3);
-         animacao.novoSprite(j3nave4);
-         animacao.novoSprite(j4nave);
-         animacao.novoSprite(j4nave2);
-         animacao.novoSprite(j4nave3);
-         animacao.novoSprite(j4nave4);
 
-         colisor.novoSprite(j1nave);
-         animacao.novoProcessamento(colisor);
+         jogador1 = new Jogador(context, j1p1, j1p2, j1p3, j1p4);
+         
+         //jogador 2
+         j2p1 = new Pino(context, controle, imagens.pino2, 
+                         imagens.explosao, 50 - 11, 50 - 20);
+         j2p2 = new Pino(context, controle, imagens.pino2, 
+                         imagens.explosao, 100 - 11, 50 - 20);
+         j2p3 = new Pino(context, controle, imagens.pino2, 
+                         imagens.explosao, 50 - 11, 100 - 20);
+         j2p4 = new Pino(context, controle, imagens.pino2, 
+                         imagens.explosao, 100 - 11, 100 - 20);
+         
+         jogador2 = new Jogador(context, j2p1, j2p2, j2p3, j2p4);
+
+         //jogador 3
+         j3p1 = new Pino(context, controle, imagens.pino3, 
+                         imagens.explosao, 500 - 11, 50 - 20);
+         j3p2 = new Pino(context, controle, imagens.pino3, 
+                         imagens.explosao, 550 - 11, 50 - 20);
+         j3p3 = new Pino(context, controle, imagens.pino3, 
+                         imagens.explosao, 500 - 11, 100 - 20);
+         j3p4 = new Pino(context, controle, imagens.pino3, 
+                         imagens.explosao, 550 - 11, 100 - 20);
+         
+         jogador3 = new Jogador(context, j3p1, j3p2, j3p3, j3p4);
+                         
+         //jogador 4
+         j4p1 = new Pino(context, controle, imagens.pino4, 
+                         imagens.explosao, 500 - 11, 500 - 20);
+         j4p2 = new Pino(context, controle, imagens.pino4, 
+                         imagens.explosao, 550 - 11, 500 - 20);
+         j4p3 = new Pino(context, controle, imagens.pino4, 
+                         imagens.explosao, 500 - 11, 550 - 20);
+         j4p4 = new Pino(context, controle, imagens.pino4, 
+                         imagens.explosao, 550 - 11, 550 - 20);
+
+         jogador1 = new Jogador(context, j4p1, j4p2, j4p3, j4p4);
+                         
+         // Ligações entre objetos
+         jogo.novoSprite(fundo);
+         jogo.novoSprite(dado);
+         
+         jogo.novoSprite(j1p1);
+         jogo.novoSprite(j1p2);
+         jogo.novoSprite(j1p3);
+         jogo.novoSprite(j1p4);
+         jogo.novoSprite(j2p1);
+         jogo.novoSprite(j2p2);
+         jogo.novoSprite(j2p3);
+         jogo.novoSprite(j2p4);
+         jogo.novoSprite(j3p1);
+         jogo.novoSprite(j3p2);
+         jogo.novoSprite(j3p3);
+         jogo.novoSprite(j3p4);
+         jogo.novoSprite(j4p1);
+         jogo.novoSprite(j4p2);
+         jogo.novoSprite(j4p3);
+         jogo.novoSprite(j4p4);
+
+         colisor.novoSprite(j1p1);
+         colisor.novoSprite(j1p2);
+         colisor.novoSprite(j1p3);
+         colisor.novoSprite(j1p4);
+         
+         colisor.novoSprite(j2p1);
+         colisor.novoSprite(j2p2);
+         colisor.novoSprite(j2p3);
+         colisor.novoSprite(j2p4);
+         
+         colisor.novoSprite(j3p1);
+         colisor.novoSprite(j3p2);
+         colisor.novoSprite(j3p3);
+         colisor.novoSprite(j3p4);
+         
+         colisor.novoSprite(j4p1);
+         colisor.novoSprite(j4p2);
+         colisor.novoSprite(j4p3);
+         colisor.novoSprite(j4p4);
+         
+         jogo.novoProcessamento(colisor);
          
          configuracoesIniciais();
       }
       
       function configuracoesIniciais() {
          // Fundos
-         espaco.velocidade = 60;
+         fundo.velocidade = 60;
          // estrelas.velocidade = 150;
          // nuvens.velocidade = 500;
          
          // Nave
-         j1nave.posicionar();
-         j1nave.velocidade = 200;
-         j1nave2.posicionar();
-         j1nave2.velocidade = 200;
-         j1nave3.posicionar();
-         j1nave3.velocidade = 200;
-         j1nave4.posicionar();
-         j1nave4.velocidade = 200;
+         j1p1.posicionar();
+         j1p1.velocidade = 200;
+         j1p2.posicionar();
+         j1p2.velocidade = 200;
+         j1p3.posicionar();
+         j1p3.velocidade = 200;
+         j1p4.posicionar();
+         j1p4.velocidade = 200;
          
          // Inimigos
          //criacaoInimigos();
          
          // Game Over
-         j1nave.acabaramVidas = function() {
-            animacao.desligar();
+         j1p1.acabaramVidas = function() {
+            jogo.desligar();
             gameOver();
          }
          
          // Pontuação
          colisor.aoColidir = function(o1, o2) {
             // Tiro com Ovni
-            if ( (o1 instanceof Tiro && o2 instanceof Ovni) ||
-                 (o1 instanceof Ovni && o2 instanceof Tiro) )
-               painel.pontuacao += 10;
+            // if ( (o1 instanceof Tiro && o2 instanceof Ovni) ||(o1 instanceof Ovni && o2 instanceof Tiro) ) {
+               //painel.pontuacao += 10;
+            // }
          }
       }
       
@@ -298,7 +312,7 @@
             }
          };
          
-         animacao.novoProcessamento(criadorInimigos);
+         jogo.novoProcessamento(criadorInimigos);
       }
       
       function novoOvni() {
@@ -317,13 +331,13 @@
          // Descontar a altura
          ovni.y = -imgOvni.height;
          
-         animacao.novoSprite(ovni);
+         jogo.novoSprite(ovni);
          colisor.novoSprite(ovni);
       }
       
       function pausarJogo() {
-         if (animacao.ligado) {
-            animacao.desligar();
+         if (jogo.ligado) {
+            jogo.desligar();
             ativarTiro(false);
             context.save();
             context.fillStyle = 'white';
@@ -335,19 +349,19 @@
          }
          else {
             criadorInimigos.ultimoOvni = new Date().getTime();
-            animacao.ligar();
+            jogo.ligar();
             ativarTiro(true);
          }
       }
       
       function ativarTiro(ativar) {
          if (ativar) {
-            teclado.disparou(ESPACO, function() {
+            controle.disparou(ESPACO, function() {
                nave.atirar();
             });
          }
          else
-            teclado.disparou(ESPACO, null);
+            controle.disparou(ESPACO, null);
       }
       
       function carregarMusicas() {
@@ -370,16 +384,16 @@
          ativarTiro(true);
          
          // Pausa
-         teclado.disparou(ENTER, pausarJogo);
+         controle.disparou(ENTER, pausarJogo);
          
          document.getElementById('link_jogar').style.display =
             'none';
          document.getElementById('postar_pontuacao').style.display =
             'none';
          
-         painel.pontuacao = 0;
+         //painel.pontuacao = 0;
          musicaAcao.play();
-         animacao.ligar();
+         jogo.ligar();
       }
       
       function gameOver() {
@@ -387,14 +401,14 @@
          ativarTiro(false);
          
          // Pausa
-         teclado.disparou(ENTER, null);
+         controle.disparou(ENTER, null);
          
          // Parar a música e rebobinar
          musicaAcao.pause();
          musicaAcao.currentTime = 0.0;
          
          // Fundo
-         context.drawImage(imagens.espaco, 0, 0, canvas.width,
+         context.drawImage(imagens.fundo, 0, 0, canvas.width,
                            canvas.height);
          
          // Texto "Game Over"
@@ -412,7 +426,7 @@
          // Restaurar as condições da nave
          nave.vidasExtras = 3;
          nave.posicionar();
-         animacao.novoSprite(nave);
+         jogo.novoSprite(nave);
          colisor.novoSprite(nave);
          
          // Tirar todos os inimigos da tela
@@ -424,9 +438,9 @@
       }
       
       function removerInimigos() {
-         for (var i in animacao.sprites) {
-            if (animacao.sprites[i] instanceof Ovni)
-               animacao.excluirSprite(animacao.sprites[i]);
+         for (var i in jogo.sprites) {
+            if (jogo.sprites[i] instanceof Ovni)
+               jogo.excluirSprite(jogo.sprites[i]);
          }
       }
       

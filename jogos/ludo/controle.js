@@ -7,7 +7,7 @@ var ESPACO = 32;
 var ENTER = 13;
 var CLIQUE_MOUSE_ESQUERDO = 0;
 
-function Teclado(elemento) {
+function Controle(elemento) {
    this.elemento = elemento;
 
    // Array de teclas pressionadas
@@ -46,7 +46,8 @@ function Teclado(elemento) {
       teclado.pressionadas[e.button] = true;
       teclado.cliqueX = e.pageX - this.offsetLeft;
       teclado.cliqueY = e.pageY - this.offsetTop;   
-      console.log('mousedown');    
+      // console.log(teclado.pressionadas)
+      console.log('mousedown');
     });
 
    elemento.addEventListener('mouseup', function(e) {
@@ -59,7 +60,7 @@ function Teclado(elemento) {
       // console.log('c');
    });
 }
-Teclado.prototype = {
+Controle.prototype = {
    pressionada: function(tecla) {
       return this.pressionadas[tecla];
    },

@@ -11,7 +11,7 @@ Fundo.prototype = {
    atualizar: function() {
       // Atualizar a posição de emenda
       this.posicaoEmenda += 
-         this.velocidade * this.animacao.decorrido / 1000;
+         this.velocidade * this.jogo.decorrido / 1000;
       
       // Emenda passou da posição
       if (this.posicaoEmenda > this.imagem.height)
