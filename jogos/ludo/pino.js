@@ -4,6 +4,8 @@ function Pino(context, teclado, imagem, imgExplosao, x, y) {
    this.imagem = imagem;
    this.x = x;
    this.y = y;
+   this.xInicial = x;
+   this.yInicial = y;
    this.width = imagem.width;
    this.height = imagem.height;
    this.velocidade = 0;
@@ -43,8 +45,6 @@ Pino.prototype = {
             y: this.teclado.cliqueY 
          };
          
-         // console.log(mouseClickPoint.x + ' ' + mouseClickPoint.y);
-
          context.save();
          context.strokeStyle = 'yellow';
          context.strokeRect(mouseClickPoint.x, mouseClickPoint.y, 30, 50);
@@ -62,17 +62,12 @@ Pino.prototype = {
             
             this.jogo.retiraPinoDaCasa();
             this.posicionar();
-            
 
             if (this.jogo.vezProximoJogador) {
                this.jogo.proximoJogador();
                this.jogo.dadoJogado = false;
                this.jogo.vezProximoJogador = false;
             } 
-            // else {
-            //    this.jogo.retiraPinoDaCasa();
-            //    this.posicionar();
-            // }
          }
       }
    },
@@ -120,39 +115,24 @@ Pino.prototype = {
       // Se colidiu com outro Pino...
       if (outro instanceof Pino) {
          // Se Pino nao eh do mesmo jogador (mesma cor)...
-         if (!this.imagem.currentSrc == outro.imagem.currentSrc) {
-            // exclui pino
-            // TODO: implementar!
+         if (this.imagem.currentSrc != outro.imagem.currentSrc) {
+            // posiciona o pino
+            if (this.imagem.currentSrc.includes(this.jogo.jogadorAnterior())) {
+                  
+               console.log(outro.imagem.currentSrc);
+               console.log('volta pra casa!');
+               outro.posicionarNaCasa();
+            } else {
+               console.log(outro.imagem.currentSrc);
+               console.log('volta pra casa!');
+               this.posicionarNaCasa();
+            }
          }
-         // this.jogo.excluirSprite(this);
-         // this.jogo.excluirSprite(outro);
-         // this.colisor.excluirSprite(this);
-         // this.colisor.excluirSprite(outro);
-         
-         // var exp1 = new Explosao(this.context, this.imgExplosao,
-         //                         this.x, this.y);
-         // var exp2 = new Explosao(this.context, this.imgExplosao,
-         //                         outro.x, outro.y);
-         
-         // this.jogo.novoSprite(exp1);
-         // this.jogo.novoSprite(exp2);
-         
-         // var nave = this;
-         // exp1.fimDaExplosao = function() {
-         //    nave.vidasExtras--;
-            
-         //    if (nave.vidasExtras < 0) {
-         //       if (nave.acabaramVidas) nave.acabaramVidas();
-         //    }
-         //    else {
-         //       // Recolocar a nave no engine
-         //       nave.colisor.novoSprite(nave);
-         //       nave.jogo.novoSprite(nave);
-               
-         //       nave.posicionar();
-         //    }
-         // }
       }
+   },
+   posicionarNaCasa: function() {
+      this.x = this.xInicial;
+      this.y = this.yInicial;
    },
    posicionar: function() {
 
@@ -370,4 +350,5 @@ Pino.prototype = {
          }
       // }
    }
+   
 }

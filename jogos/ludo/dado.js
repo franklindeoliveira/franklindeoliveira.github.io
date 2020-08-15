@@ -39,29 +39,26 @@ Dado.prototype = {
             this.jogo.dadoJogado = true;
             
             let min = 5, max = 7;
-            this.jogo.numeroSorteado = Math.floor(Math.random() * (max - min) + min);
+            //  = Math.floor(Math.random() * (max - min) + min);
             // this.jogo.numeroSorteado = 3;
 
             console.log('num sorteado: ' + this.jogo.numeroSorteado);
             console.log('tds em casa? ' + this.jogo.numPinosCasaJogadorAtual());
 
             document.getElementById('sorteado').textContent = this.jogo.numeroSorteado;
-            
-            // if (this.jogo.numeroSorteado < 6 /* && this.jogo.jogadorAtual().todosPinosCasa() */) {
+
             if (this.jogo.numeroSorteado < 6) {
                if (this.jogo.numPinosCasaJogadorAtual() == 4) {
                   this.jogo.proximoJogador();
                   this.jogo.dadoJogado = false;
                } 
                else {
-                  // if (this.jogo.numeroSorteado) {
-                     jogo.vezProximoJogador = true;
-                  // }
-               }
-            } else {
-               if (this.jogo.numPinosCasaJogadorAtual() < 4) {
                   this.jogo.vezProximoJogador = true;
                }
+            } else {
+               // if (this.jogo.numPinosCasaJogadorAtual() < 4) {
+                  this.jogo.vezProximoJogador = true;
+               // }
             }
          }
          this.posicionar();
@@ -95,5 +92,4 @@ Dado.prototype = {
             break;
       }
    }
-   
 }

@@ -122,6 +122,21 @@ Jogo.prototype = {
       document.getElementById('vez').textContent = this.jogadorAtual;
    },
 
+   jogadorAnterior: function() {
+      switch (this.jogadorAtual) {
+         case 'pino-amarelo':
+            return 'pino-verde';
+         case 'pino-azul':
+            return 'pino-amarelo';
+         case 'pino-vermelho':
+            return 'pino-azul';
+         case 'pino-verde':
+            return 'pino-vermelho';
+         default:
+      }
+      document.getElementById('vez').textContent = this.jogadorAtual;
+   },
+
    retiraPinoDaCasa: function() {
       switch (this.jogadorAtual) {
          case 'pino-amarelo':
@@ -160,6 +175,13 @@ Jogo.prototype = {
       }
    },
 
+   colocaPinoNaCasa: function(cor) {      
+        if (cor.includes('pino-amarelo')) this.j1NumDentroCasa++;
+        if (cor.includes('pino-azul')) this.j2NumDentroCasa++;
+        if (cor.includes('pino-vermelho')) this.j3NumDentroCasa++;
+        if (cor.includes('pino-verde')) this.j4NumDentroCasa++;      
+   },
+
    numPinosCasaJogadorAtual: function() {
       switch (this.jogadorAtual) {
          case 'pino-amarelo':
@@ -177,6 +199,63 @@ Jogo.prototype = {
          default:
             return -1;
       }
+   },
+
+   posicionarInicial: function(pino) {
+
+      if (pino.imagem.currentSrc.includes('pino-amarelo')) {
+
+            // if (this.dentroCasa) {
+               this.x = 250 - 22/2;
+               this.y = 500 - 40/2;
+            //    this.posicaoAtual = 1;
+            //    this.dentroCasa = false;
+            //    // this.jogo.numeroSorteado = 1;
+            //    this.jogo.proximoJogador();
+            //    this.jogo.dadoJogado = false;
+            //    this.jogo.vezProximoJogador = false;
+            //    return;
+            // }
+         
+      if (pino.imagem.currentSrc.includes('pino-azul')) {
+         // if (this.jogo.numeroSorteado == 6) {
+         //    if (this.dentroCasa) {
+               this.x = 100 - 22/2;
+               this.y = 250 - 40/2;
+               return; 
+      }
+
+      if (pino.imagem.currentSrc.includes('pino-vermelho')) {
+         // if (this.jogo.numeroSorteado == 6) {
+         //    if (this.dentroCasa) {
+               this.x = 350 - 22/2;
+               this.y = 100 - 40/2; 
+            //    this.posicaoAtual = 1;
+            //    this.dentroCasa = false;
+            //    // this.jogo.numeroSorteado = 1;
+            //    this.jogo.proximoJogador();
+            //    this.jogo.dadoJogado = false;
+            //    this.jogo.vezProximoJogador = false;
+               return;
+            // }
+         }
+
+      if (pino.imagem.currentSrc.includes('pino-verde')) {
+         // if (this.jogo.numeroSorteado == 6) {
+         //    if (this.dentroCasa) {
+               this.x = 500 - 22/2;
+               this.y = 350 - 40/2; 
+            //    this.posicaoAtual = 1;
+            //    this.dentroCasa = false;
+            //    // this.jogo.numeroSorteado = 1;
+            //    this.jogo.proximoJogador();
+            //    this.jogo.dadoJogado = false;
+            //    this.jogo.vezProximoJogador = false;
+            //    return;
+            // }
+         }
+      }
+   // }
    }
 
 }
