@@ -6,7 +6,7 @@ fetch("https://api.github.com/users/franklindeoliveira/repos")
         json.forEach(repo => {
             $itens.innerHTML += 
             `<li>
-                <a href="#">
+                <a href="${repo.html_url}" target="_black">
                     <div class="projeto">
                         <h2 class="projeto-nome">${repo.name}</h2>
                         <p class="projeto-descricao">${repo.description}</p>

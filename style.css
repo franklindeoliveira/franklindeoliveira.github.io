@@ -3,21 +3,37 @@
 }
 
 header, footer {
-    background-color: #FFDF00;
+    background: linear-gradient(0deg, #ffbc00, #ffdf00);
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
 }
 
 .perfil {
     width: 20%;
-    max-width: 300px;
-    margin: 10px;
-    border-radius: 5px;
+    max-width: 150px;
+    padding: 5px;
+    border-radius: 10px;
+    vertical-align: middle;
 }
 
 .descricao-site {
+    width: 60%;
     display: inline-block;
-    top: 75px;
-    left: 0px;
-    vertical-align: top;
+    text-align: center;
+    padding: 30px;
+    vertical-align: middle;
+}
+
+.contato {
+    width: 20%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+main {
+    background-color: #fafafa;
 }
 
 .menu {
@@ -31,13 +47,19 @@ header, footer {
 }
 
 .container {
-    width: 940px;
+    width: 100%;
+    max-width: 940px;
 	margin: 0 auto;
+}
+
+.titulo-projetos {
+    font-size: 2em;
+    padding: 20px 0px;
 }
 
 .projeto {
     display: inline-block;
-    border: 1px solid #000000;
+    border: 1px solid lightgrey;
     width: 250px;
     height: 200px;
     border-radius: 5px;
@@ -45,12 +67,20 @@ header, footer {
     padding: 5px;
 }
 
+.projeto:hover {
+    box-shadow: 0px 0px 5px 0px lightgrey;
+}
+
 .projeto-nome {
     padding: 5px;
+    font-size: 1.5em;
+    border-bottom: 1px solid #e1e1e1
 }
 
 .projeto-descricao {
     padding: 5px;
+    padding-top: 10px;
+    font-size: 1em;
 }
 
 .itens li {
@@ -66,4 +96,8 @@ footer {
     width: 100%;
     height: 50px;
     text-align: center;
+}
+
+footer p {
+    padding-top: 15px;
 }
