@@ -1,9 +1,11 @@
+let projetosGithub = ["lacosdeencantamento", "gepetto", "vote-no-restaurante", "acolheaps"];
 fetch("https://api.github.com/users/franklindeoliveira/repos")
     .then(resp => resp.json())
     .then(function(json) {        
-        let $itens = document.querySelector(".itens");
+        let $itens = document.querySelector(".projetos");
 
-        json.forEach(repo => {
+        json.filter((repo) => projetosGithub.includes(repo.name))
+        .forEach(repo => {
             $itens.innerHTML += 
             `<li>
                 <a href="${repo.html_url}" target="_black">

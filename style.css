@@ -10,45 +10,31 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .perfil {
     width: 20%;
     max-width: 150px;
-    padding: 5px;
-    border-radius: 10px;
-    vertical-align: middle;
+    min-width: 100px;
+    padding: 10px;
+    border-radius: 20px;
 }
 
 .descricao-site {
-    width: 60%;
-    display: inline-block;
     text-align: center;
-    padding: 30px;
-    vertical-align: middle;
-}
-
-.contato {
-    width: 20%;
-    display: inline-block;
-    vertical-align: middle;
+    margin: 0 2%;
 }
 
 main {
     background-color: #fafafa;
 }
 
-.menu {
-    position: absolute;
-    right: 50px;
-    top: 100px;
-}
-
-.menu li {
-    display: inline;
-}
-
 .container {
-    width: 100%;
-    max-width: 940px;
+    width: 80%;
 	margin: 0 auto;
 }
 
@@ -60,10 +46,9 @@ main {
 .projeto {
     display: inline-block;
     border: 1px solid lightgrey;
-    width: 250px;
-    height: 200px;
+    width: 100%;
+    height: 300px;
     border-radius: 5px;
-    margin: 5px;
     padding: 5px;
 }
 
@@ -72,7 +57,7 @@ main {
 }
 
 .projeto-nome {
-    padding: 5px;
+    padding: 15px;
     font-size: 1.5em;
     border-bottom: 1px solid #e1e1e1
 }
@@ -83,9 +68,18 @@ main {
     font-size: 1em;
 }
 
-.itens li {
-    display: inline-block;
-    vertical-align: top;
+.projetos {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.projetos li {
+    width: 31%;
+    margin: 1%;
+}
+
+.titulo-projetos {
+    margin-left: 1%;
 }
 
 a {
@@ -93,11 +87,15 @@ a {
 }
 
 footer {
-    width: 100%;
+    display: flex;
     height: 50px;
-    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 
-footer p {
-    padding-top: 15px;
+/*parte mobile*/
+@media(max-width: 1024px) {
+    .projetos li {
+        width: 100%;
+    }
 }
